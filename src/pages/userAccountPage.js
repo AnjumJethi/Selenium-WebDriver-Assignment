@@ -1,20 +1,18 @@
 "use strict";
-
-
 const BasePage = require('./basePage');
-const {By} = require('selenium-webdriver');
+
 
 class UserAccountPage extends BasePage{
-    constructor ( 	
-        webdriver,
+    constructor ( 
+        webdriver,	
 		driver, 
 		targetUrl,
-		waitTimeout = 10000
+		waitTimeout = 20000
 		) {     
             super(driver, targetUrl, waitTimeout);
-            this.webdriver=webdriver;
             this.driver=driver;
             this.targetUrl=targetUrl;
+            this.waitTimeout =waitTimeout;
             this.id_title="id_gender1";
             this.id_firstName="customer_firstname";
             this.id_lastName="customer_lastname";
@@ -25,7 +23,7 @@ class UserAccountPage extends BasePage{
             this.id_year="years";
             this.id_address="address1";
             this.id_city="city";
-            this.id_state="id_state";
+            this.xpath_state="//select[@id='id_state']";
             this.id_zipCode="postcode";
             this.id_country="id_country";
             this.id_mobilePhone="phone_mobile";
@@ -39,24 +37,23 @@ class UserAccountPage extends BasePage{
     async createUserAccount(){
         
         // fill out user details
+        this.driver.sleep(this.waitTimeout);
         this.basePage = new BasePage(this.webdriver,this.driver,this.targetUrl);
-       
+        await this.basePage.nameSetValue(this.id_country,"United States");
         await this.basePage.idSetValue(this.id_title,1);
         await this.basePage.idSetValue(this.id_firstName,"TestAJ");
         await this.basePage.idSetValue(this.id_lastName,"AJ");
-        await this.basePage.idSetValue(this.id_date,12); 
-        await this.basePage.idSetValue(this.id_month,"June");     
-        await this.basePage.idSetValue(this.id_year,1984);    
+        await this.basePage.idSelectSetValue(this.id_date,12); 
+        await this.basePage.idSelectSetValue(this.id_month,"June");     
+        await this.basePage.idSelectSetValue(this.id_year,1984);    
         await this.basePage.nameSetValue(this.id_password,"test@123");
-        //await this.basePage.idSetValue("firstname","TestAJ");
-        //await this.basePage.idSetValue("lastname","aj");
-        await this.basePage.idSetValue(this.id_address,"F12 New Town Hights");
-        await this.basePage.nameSetValue(this.id_city,"SanDego");
-        await this.basePage.idSetValue(this.id_state,"California");
-        await this.basePage.nameSetValue(this.id_zipCode,10203);
-        await this.basePage.nameSetValue(this.id_country,"United States");
         await this.basePage.idSetValue(this.id_mobilePhone,98987474123);
         await this.basePage.idSetValue(this.id_addressAlias,"Add1");
+        await this.basePage.idSetValue(this.id_address,"F12 New Town Hights");
+        await this.basePage.nameSetValue(this.id_city,"SanDego");
+        await this.basePage.nameSetValue(this.id_zipCode,10203);
+        await this.basePage.xpathSetValue(this.xpath_state,"Arizona");
+        
         await this.basePage.nameClick(this.id_registration);
         const confirmation = await this.basePage.xpathGetText(this.xpath_confirmMsg);
         expect(confirmation).toBe(this.confirmMsg);

@@ -1,5 +1,5 @@
 "use strict";
-const {By} = require('selenium-webdriver');
+const {By,until} = require('selenium-webdriver');
 
 
 class BasePage{
@@ -7,7 +7,7 @@ class BasePage{
         webdriver,
         driver,
         targetUrl,
-        waitTimeout = 10000,
+        waitTimeout = 50000,
       ) {
         this.webdriver = webdriver;
         this.driver = driver;
@@ -16,31 +16,49 @@ class BasePage{
       }
 
       async idSetValue(locatorValue,objectValue){
-        await this.driver.findElement(By.id(locatorValue)).sendKeys(objectValue);
+        const element = await this.driver.wait(until.elementLocated(By.id(locatorValue)), this.waitTimeout);
+        const objelement = await this.driver.wait(until.elementIsVisible(element), this.waitTimeout);
+        await objelement.sendKeys(objectValue);
+      }
+
+      async idSelectSetValue(locatorValue,objectValue){
+        const objelement = await this.driver.findElement(By.id(locatorValue));
+        await objelement.sendKeys(objectValue);
       }
 
       async nameSetValue(locatorValue,objectValue){
-        await this.driver.findElement(By.name(locatorValue)).sendKeys(objectValue);
+        const element = await this.driver.wait(until.elementLocated(By.name(locatorValue)), this.waitTimeout);
+        const objelement = await this.driver.wait(until.elementIsVisible(element), this.waitTimeout);
+        await objelement.sendKeys(objectValue);
       }
 
       async xpathSetValue(locatorValue,objectValue){
-        await this.driver.findElement(By.xpath(locatorValue)).sendKeys(objectValue);
+        const element = await this.driver.wait(until.elementLocated(By.xpath(locatorValue)), this.waitTimeout);
+        await element.sendKeys(objectValue);
       }
 
       async idClick(locatorValue){
-        await this.driver.findElement(By.id(locatorValue)).click();
+        const element = await this.driver.wait(until.elementLocated(By.id(locatorValue)), this.waitTimeout);
+        const objelement = await this.driver.wait(until.elementIsVisible(element), this.waitTimeout);
+        await objelement.click();
       }
 
       async nameClick(locatorValue){
-        await this.driver.findElement(By.name(locatorValue)).click();
+        const element = await this.driver.wait(until.elementLocated(By.name(locatorValue)), this.waitTimeout);
+        const objelement = await this.driver.wait(until.elementIsVisible(element), this.waitTimeout);
+        await objelement.click();
       }
 
       async xpathClick(locatorValue){
-        await this.driver.findElement(By.xpath(locatorValue)).click();
+        const element = await this.driver.wait(until.elementLocated(By.xpath(locatorValue)), this.waitTimeout);
+        const objelement = await this.driver.wait(until.elementIsVisible(element), this.waitTimeout);
+        await objelement.click();
       }
       
       async xpathGetText(locatorValue){
-        const email=await this.driver.findElement(By.xpath(locatorValue)).getText();
+        const element = await this.driver.wait(until.elementLocated(By.xpath(locatorValue)), this.waitTimeout);
+        const objelement = await this.driver.wait(until.elementIsVisible(element), this.waitTimeout);
+        const email = await objelement.getText();
         return email;
       }
 

@@ -3,7 +3,7 @@ const Chrome = require("selenium-webdriver/chrome");
 const { Builder } = require("selenium-webdriver");
 
 
-module.exports = () => {
+module.exports = (checkHeadless) => {
   const options = new Chrome.Options();
   options.addArguments("--no-sandbox");
   options.addArguments("--incognito");
@@ -11,8 +11,13 @@ module.exports = () => {
   options.addArguments("--disable-default-apps");
   options.addArguments("--disable-infobars");
   options.addArguments("--disable-extensions");
-  // options.headless();
+  
+  let isHeadless = checkHeadless.filter((x)=> x.includes('headless'));
 
+  if (isHeadless.length==1){
+    options.headless();
+  }
+  
   const service = new Chrome.ServiceBuilder(chromeDriver.binPath());
 
   const driver = new Builder()

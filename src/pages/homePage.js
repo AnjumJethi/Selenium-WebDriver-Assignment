@@ -1,8 +1,6 @@
 "use strict";
 
-
 const BasePage = require('./basePage');
-const {By} = require('selenium-webdriver');
 
 
 class HomePage  extends BasePage{
@@ -13,9 +11,9 @@ class HomePage  extends BasePage{
 		targetUrl,
 		waitTimeout = 20000
 		) {     
-            const homePageTitle = 'home';       
+            const homePageTitle = 'home';     
             super(driver, targetUrl, waitTimeout);
-            this.webdriver=webdriver;
+            this.waitTimeout = waitTimeout;  
             this.driver=driver;
             this.targetUrl=targetUrl;
             this.SignIn="//a[normalize-space()='Sign in']";
@@ -24,15 +22,16 @@ class HomePage  extends BasePage{
             this.CreateAnAccount="SubmitCreate";
             this.emailLebelName = "Email address";
             this.EmailAlreadyExist="//li[contains(text(),'An account using this email address has already be')]";
-            this.EmailAlreadyExistLebel=  "An account using this email address has already be";  
+            this.EmailAlreadyExistLebel=  "An account using this email address has already been registered. Please enter a valid password or request a new one.";  
     }
     
     async signIn(){
+        const consumerEmailID = (new Date%9e6).toString(36) +  "@gmail.com";
         await this.driver.get(this.targetUrl);
         this.basePage = new BasePage(this.webdriver,this.driver,this.targetUrl);
         await this.basePage.xpathClick(this.SignIn);
         const email = await this.basePage.xpathGetText(this.EmailLebel);
-        await this.basePage.idSetValue(this.EmailId,"t115ajethi@ggm.com");
+        await this.basePage.idSetValue(this.EmailId,consumerEmailID);
         await this.basePage.nameClick(this.CreateAnAccount);
         expect(email).toBe(this.emailLebelName);
     }
